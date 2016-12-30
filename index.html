@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Counter</title>
+        <style>
+            html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            main {
+                text-align: center;
+            }
+
+            p {
+                margin: 0;
+            }
+
+            #heart {
+                width: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                font-size: 50rem;
+                line-height: 50rem;
+                color: rgba(255,0,128,0);
+                text-align: center;
+                margin: 0;
+                z-index: -1;
+            }
+
+            .message {
+                font-size: 6rem;
+            }
+
+            #num {
+                font-size: 24rem;
+            }
+
+            #days {
+                font-size: 12rem;
+                margin-left: -4rem;
+            }
+
+            .row1 {
+                margin-top: -5rem;
+            }
+
+            .row2 {
+                margin-top: -8rem;
+            }
+
+            #resetButton {
+                font-size: 6rem;
+                border: solid 5px black;
+                border-radius: 1rem;
+                background-color: rgba(200,200,200,0.6);
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <div id="heart">&#10084; </div>
+            <div class="message">
+                <p class="row1"><span id="num">0</span> <span id="days">day</span></p>
+                <p class="row2">past from the day</p>
+            </div>
+            <button id="resetButton">Reset</button>
+        </main>
+        <script>
+            (function() {
+                function setup() {
+                    if (!localStorage.day) {
+                        reset();
+                    }
+                    var resetButton = document.getElementById('resetButton');
+                    resetButton.addEventListener('click', function() {
+                        reset();
+                    });
+                    setColor();
+                    setText();
+                }
+                function current() {
+                    var now = new Date();
+                    return now.getTime();
+                }
+                function reset() {
+                    localStorage.day = current();
+                    setColor();
+                    setText();
+                }
+                function pastDays() {
+                    return Math.floor((current() - localStorage.day) / (24 * 60 * 60 * 1000));
+                }
+                function setColor() {
+                    var heart = document.getElementById('heart');
+                    var alpha = Math.min(1.0, pastDays() / 21);
+                    heart.style.color = 'rgba(255,0,128,' + alpha + ')';
+                }
+                function setText() {
+                    var past = pastDays();
+                    var num = document.getElementById('num');
+                    num.textContent = past;
+                    var days = document.getElementById('days');
+                    if (past <= 1) {
+                        days.textContent = 'day';
+                    } else {
+                        days.textContent = 'days';
+                    }
+                }
+                setup();
+            })();
+        </script>
+    </body>
+</html>
